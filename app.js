@@ -637,7 +637,7 @@ function bindAdminEvents() {
 
       publishStatus.textContent = "Publicando...";
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
-const apiUrl = "https://api.github.com/repos/ofertasactivas/legarage/contents/catalogo.json";
+      const apiUrl = "https://api.github.com/repos/ofertasactivas/legarage/contents/catalogo.json";
 
       try {
         const getRes = await fetch(apiUrl, {
