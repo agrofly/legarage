@@ -1,0 +1,84 @@
+{
+  "brand": "Le Garage",
+  "currency": {
+    "locale": "es-BO",
+    "code": "BOB",
+    "decimals": 0,
+    "symbol": "Bs"
+  },
+  "heroText": "Combos con descuento real, stock actualizado y atencion inmediata para cerrar ventas por redes sociales.",
+  "contact": {
+    "whatsapp": "59178463301",
+    "footerMessage": "Atencion por WhatsApp de lunes a sabado, 9:00 a 20:00."
+  },
+  "catalogs": [
+    {
+      "id": "ropa",
+      "name": "Ropa",
+      "products": [
+        {
+          "name": "Buzo Urban Classic",
+          "price": 39990,
+          "details": [
+            "Algodon premium",
+            "Talles S al XL",
+            "Envio en 24 horas"
+          ],
+          "ctaText": "Consultar talle",
+          "defaultAction": "consultar",
+          "productStatus": "activo",
+          "oldPrice": 49990,
+          "image": "assets/images/camisa_cuadros.webp"
+        }
+      ]
+    },
+    {
+      "id": "accesorios",
+      "name": "Accesorios",
+      "products": [
+        {
+          "name": "Vendo las nalgas de betiño",
+          "price": 10,
+          "details": [
+            "-tiene mal olor",
+            "-tiene mucho uso"
+          ],
+          "ctaText": "Comprar ahora",
+          "defaultAction": "consultar",
+          "productStatus": "activo",
+          "oldPrice": 5,
+          "image": "assets\\images\\betoEncina.jpeg"
+        },
+        {
+          "name": "Reloj Garmin",
+          "price": 4200,
+          "details": [
+            "- Garmin",
+            "- Modelo Veo",
+            "- Año 2017",
+            "- Color Negro"
+          ],
+          "ctaText": "Comprar ahora",
+          "defaultAction": "quiero",
+          "productStatus": "activo",
+          "oldPrice": 5000,
+          "image": "assets\\images\\RelojGarmin.jpeg"
+        },
+        {
+          "name": "Reloj Minimal Steel",
+          "price": 45990,
+          "oldPrice": 55990,
+          "image": "https://placehold.co/1200x750/png?text=Reloj+Minimal+Steel",
+          "details": [
+            "Acero inoxidable",
+            "Resistente al agua",
+            "Garantia 6 meses"
+          ],
+          "ctaText": "Comprar por WhatsApp",
+          "defaultAction": "comprar"
+        }
+      ]
+    }
+  ],
+  "activeCatalogId": "accesorios"
+}
