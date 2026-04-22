@@ -1,10 +1,10 @@
 {
-  "brand": "Le Garage",
+  "brand": "LE GARAGE",
   "currency": {
     "locale": "es-BO",
     "code": "BOB",
     "decimals": 2,
-    "symbol": "Bs"
+    "symbol": "$"
   },
   "heroText": "Combos con descuento real, stock actualizado y atencion inmediata para cerrar ventas por redes sociales.",
   "contact": {
@@ -17,8 +17,8 @@
       "name": "Ropa",
       "products": [
         {
-          "name": "Buzo Urban Classic",
-          "price": 39990,
+          "name": "Camisa Cuadros",
+          "price": 300.2,
           "details": [
             "Algodon premium",
             "Talles S al XL",
@@ -27,8 +27,8 @@
           "ctaText": "Consultar talle",
           "defaultAction": "consultar",
           "productStatus": "activo",
-          "oldPrice": 49990,
-          "image": "assets/images/camisa_cuadros.webp"
+          "oldPrice": 305.5,
+          "image": "assets/images/camisa_cuadros.webp, assets\\images\\RelojGarmin.webp"
         }
       ]
     },
@@ -36,34 +36,6 @@
       "id": "accesorios",
       "name": "Accesorios",
       "products": [
-        {
-          "name": "Vendo las nalgas de betiño",
-          "price": 10,
-          "details": [
-            "-tiene mal olor",
-            "-tiene mucho uso"
-          ],
-          "ctaText": "Comprar ahora",
-          "defaultAction": "consultar",
-          "productStatus": "activo",
-          "oldPrice": 5,
-          "image": "assets\\images\\betoEncina.jpeg"
-        },
-        {
-          "name": "Reloj Garmin",
-          "price": 4200,
-          "details": [
-            "- Garmin",
-            "- Modelo Veo",
-            "- Año 2017",
-            "- Color Negro"
-          ],
-          "ctaText": "Comprar ahora",
-          "defaultAction": "quiero",
-          "productStatus": "activo",
-          "oldPrice": 5000,
-          "image": "assets\\images\\RelojGarmin.jpeg"
-        },
         {
           "name": "Reloj Minimal Steel",
           "price": 45990,
@@ -80,5 +52,5 @@
       ]
     }
   ],
-  "activeCatalogId": "accesorios"
+  "activeCatalogId": "ropa"
 }
