@@ -3,7 +3,7 @@
   "currency": {
     "locale": "es-BO",
     "code": "BOB",
-    "decimals": 0,
+    "decimals": 2,
     "symbol": "Bs"
   },
   "heroText": "Combos con descuento real, stock actualizado y atencion inmediata para cerrar ventas por redes sociales.",

@@ -3,7 +3,7 @@ window.SALES_DATA = {
   currency: {
     locale: "es-BO",
     code: "BOB",
-    decimals: 0,
+    decimals: 2,
     symbol: "$",
   },
   heroText:
