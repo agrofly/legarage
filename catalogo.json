@@ -7,6 +7,46 @@
     "symbol": "$"
   },
   "heroText": "Combos con descuento real, stock actualizado y atencion inmediata para cerrar ventas por redes sociales.",
+  "texts": {
+    "tag": "ENVIO RAPIDO | PAGO SEGURO",
+    "heroTitle": "Ofertas que se agotan en horas",
+    "ctaText": "Ver catalogo",
+    "sectionTitle": "Destacados",
+    "sectionSubtitle": "Precios claros, detalles completos y compra directa por WhatsApp."
+  },
+  "labels": {
+    "before": "Antes",
+    "waSuffix": "por WhatsApp",
+    "active": "Oferta activa",
+    "sold": "Vendido",
+    "out": "Agotado",
+    "noImage": "Sin imagen",
+    "updatedPrefix": "Catalogo actualizado:",
+    "waFloat": "WhatsApp"
+  },
+  "actionLabels": {
+    "consultar": "Consultar",
+    "reservar": "Reservar",
+    "quiero": "Ofertar",
+    "comprar": "Comprar"
+  },
+  "waMessages": {
+    "consultar": "Hola! Quiero consultar por {producto} a {precio}.",
+    "reservar": "Hola! Quiero reservar {producto} por {precio}.",
+    "quiero": "Hola! Lo quiero: {producto} por {precio}.",
+    "comprar": "Hola! Quiero comprar {producto} por {precio}."
+  },
+  "metaDescription": "Promociones con stock limitado. Consulta detalles, precios y compra por WhatsApp en minutos.",
+  "theme": {
+    "bg": "#f5f2e9",
+    "ink": "#121212",
+    "accent": "#ff6b2c",
+    "accentDark": "#d54f14",
+    "deep": "#1f3b38",
+    "card": "#fffdfa",
+    "line": "#d8d2c6",
+    "ok": "#1f9d74"
+  },
   "contact": {
     "whatsapp": "59178463301",
     "footerMessage": "Atencion por WhatsApp de lunes a sabado, 9:00 a 20:00."
@@ -18,7 +58,9 @@
       "products": [
         {
           "name": "Camisa Cuadros",
-          "price": 300.2,
+          "price": 39990,
+          "oldPrice": 49990,
+          "image": "assets/images/camisa_cuadros.webp",
           "details": [
             "Algodon premium",
             "Talles S al XL",
@@ -27,8 +69,13 @@
           "ctaText": "Consultar talle",
           "defaultAction": "consultar",
           "productStatus": "activo",
-          "oldPrice": 305.5,
-          "image": "assets/images/camisa_cuadros.webp, assets\\images\\RelojGarmin.webp"
+          "enabledActions": [
+            "consultar",
+            "reservar",
+            "quiero",
+            "comprar"
+          ],
+          "customActionLabels": {}
         }
       ]
     },
@@ -47,7 +94,14 @@
             "Garantia 6 meses"
           ],
           "ctaText": "Comprar por WhatsApp",
-          "defaultAction": "comprar"
+          "defaultAction": "comprar",
+          "enabledActions": [
+            "consultar",
+            "reservar",
+            "quiero",
+            "comprar"
+          ],
+          "customActionLabels": {}
         }
       ]
     }
