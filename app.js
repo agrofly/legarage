@@ -1181,12 +1181,16 @@ function bindAdminEvents() {
   const createCatalogBtn = document.getElementById("createCatalogBtn");
   const renameCatalogBtn = document.getElementById("renameCatalogBtn");
   const deleteCatalogBtn = document.getElementById("deleteCatalogBtn");
+  const moveCatalogUpBtn = document.getElementById("moveCatalogUpBtn");
+  const moveCatalogDownBtn = document.getElementById("moveCatalogDownBtn");
   const editProductSelectEl = document.getElementById("editProductSelect");
   const moveCatalogSelectEl = document.getElementById("moveCatalogSelect");
   const loadProductBtn = document.getElementById("loadProductBtn");
   const saveProductBtn = document.getElementById("saveProductBtn");
   const deleteProductBtn = document.getElementById("deleteProductBtn");
   const moveProductBtn = document.getElementById("moveProductBtn");
+  const moveProductUpBtn = document.getElementById("moveProductUpBtn");
+  const moveProductDownBtn = document.getElementById("moveProductDownBtn");
 
   if (!jsonInputEl || !addProductForm) return;
 
@@ -1403,6 +1407,67 @@ function bindAdminEvents() {
     render();
     showMessage(`Producto movido a ${target.name}.`);
   });
+
+  // ============================================================
+  //  Reordenar CATEGORIAS (↑ / ↓)
+  // ============================================================
+  function moveCatalog(direction) {
+    const activeId = state.activeCatalogId;
+    const idx = state.catalogs.findIndex((c) => c.id === activeId);
+    if (idx < 0) return;
+
+    const newIdx = idx + direction;
+    if (newIdx < 0 || newIdx >= state.catalogs.length) {
+      showMessage(direction < 0
+        ? "El catalogo ya esta al inicio."
+        : "El catalogo ya esta al final.");
+      return;
+    }
+
+    const [moved] = state.catalogs.splice(idx, 1);
+    state.catalogs.splice(newIdx, 0, moved);
+    saveData();
+    render();
+    showMessage(`Catalogo "${moved.name}" movido ${direction < 0 ? "arriba" : "abajo"}.`);
+  }
+
+  if (moveCatalogUpBtn) moveCatalogUpBtn.addEventListener("click", () => moveCatalog(-1));
+  if (moveCatalogDownBtn) moveCatalogDownBtn.addEventListener("click", () => moveCatalog(1));
+
+  // ============================================================
+  //  Reordenar PRODUCTOS dentro del catalogo activo (↑ / ↓)
+  // ============================================================
+  function moveProduct(direction) {
+    const selected = Number(editProductSelectEl.value);
+    if (Number.isNaN(selected)) {
+      showMessage("Selecciona un producto.");
+      return;
+    }
+
+    const activeCatalog = getActiveCatalog();
+    const products = activeCatalog.products;
+    const newIdx = selected + direction;
+
+    if (newIdx < 0 || newIdx >= products.length) {
+      showMessage(direction < 0
+        ? "El producto ya esta al inicio."
+        : "El producto ya esta al final.");
+      return;
+    }
+
+    const [moved] = products.splice(selected, 1);
+    products.splice(newIdx, 0, moved);
+    saveData();
+    render();
+
+    // Mantener seleccionado el producto en su nueva posicion
+    if (editProductSelectEl) editProductSelectEl.value = String(newIdx);
+
+    showMessage(`Producto "${moved.name}" movido ${direction < 0 ? "arriba" : "abajo"}.`);
+  }
+
+  if (moveProductUpBtn) moveProductUpBtn.addEventListener("click", () => moveProduct(-1));
+  if (moveProductDownBtn) moveProductDownBtn.addEventListener("click", () => moveProduct(1));
 }
 
 // ============================================================
