@@ -4,7 +4,7 @@
     "locale": "es-BO",
     "code": "BOB",
     "decimals": 2,
-    "symbol": "$"
+    "symbol": "Bs"
   },
   "heroText": "Combos con descuento real, stock actualizado y atencion inmediata para cerrar ventas por redes sociales.",
   "texts": {
@@ -55,45 +55,7 @@
     {
       "id": "ropa",
       "name": "Ropa",
-      "products": [
-        {
-          "name": "Oasics",
-          "price": 260,
-          "details": [
-            "10/10",
-            "Talla 44",
-            "Envío a todos los departamentos"
-          ],
-          "defaultAction": "consultar",
-          "productStatus": "activo",
-          "enabledActions": [
-            "consultar",
-            "reservar",
-            "comprar"
-          ],
-          "customActionLabels": {},
-          "image": "assets/images/d8ed1303-6f75-48c9-b030-a3dc2641f020-mpbko0g7t4g.jpg"
-        },
-        {
-          "name": "Zapatillas Adiddas",
-          "price": 350,
-          "details": [
-            "10/10",
-            "Zapatillas running",
-            "Envío en 24 horas"
-          ],
-          "defaultAction": "consultar",
-          "productStatus": "activo",
-          "enabledActions": [
-            "consultar",
-            "reservar",
-            "comprar"
-          ],
-          "customActionLabels": {},
-          "oldPrice": 370,
-          "image": "assets/images/bc50b808-231c-47c5-a331-195e542d35f7-mpbk1cq1xx2.jpg"
-        }
-      ]
+      "products": []
     },
     {
       "id": "accesorios",
@@ -118,6 +80,49 @@
             "comprar"
           ],
           "customActionLabels": {}
+        }
+      ]
+    },
+    {
+      "id": "calzado-deportivo",
+      "name": "Calzado Deportivo",
+      "products": [
+        {
+          "name": "Adiddas",
+          "price": 350,
+          "details": [
+            "10/10",
+            "Zapatillas running",
+            "Envío en 24 horas"
+          ],
+          "defaultAction": "consultar",
+          "productStatus": "activo",
+          "enabledActions": [
+            "consultar",
+            "reservar",
+            "comprar"
+          ],
+          "customActionLabels": {},
+          "oldPrice": 370,
+          "image": "assets/images/bc50b808-231c-47c5-a331-195e542d35f7-mpbk1cq1xx2.jpg"
+        },
+        {
+          "name": "Oasics",
+          "price": 260,
+          "details": [
+            "10/10",
+            "Talla 44",
+            "Envío a todos los departamentos"
+          ],
+          "defaultAction": "consultar",
+          "productStatus": "activo",
+          "enabledActions": [
+            "consultar",
+            "reservar",
+            "comprar"
+          ],
+          "customActionLabels": {},
+          "image": "assets/images/d8ed1303-6f75-48c9-b030-a3dc2641f020-mpbko0g7t4g.jpg"
         }
       ]
     }
