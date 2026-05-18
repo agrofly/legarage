@@ -491,3 +491,658 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================== */
+/*  Pantalla de login admin       */
+/* ============================== */
+.admin-login {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: linear-gradient(150deg, #1f3b38 0%, #0f1e1d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.admin-login[hidden] {
+  display: none;
+}
+
+.admin-login-card {
+  background: #fffdfa;
+  border-radius: 24px;
+  padding: 2rem 1.6rem;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.admin-login-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.admin-login-logo img {
+  height: 64px;
+  width: auto;
+}
+
+.admin-login-card h2 {
+  margin: 0.3rem 0 0.3rem;
+  color: var(--deep);
+  font-size: 1.5rem;
+}
+
+.admin-login-card > p {
+  margin: 0 0 1.2rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.admin-login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.admin-login-card input[type="password"] {
+  text-align: center;
+  font-size: 1.4rem;
+  letter-spacing: 0.4rem;
+  font-weight: 700;
+  padding: 0.85rem 0.7rem;
+  margin: 0;
+}
+
+.admin-login-card button {
+  width: 100%;
+  margin: 0;
+}
+
+.admin-login-error {
+  color: #d4351c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-height: 1.2rem;
+  margin: 0;
+}
+
+.admin-login-back {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #666;
+  text-decoration: none;
+}
+
+.admin-login-back:hover {
+  color: var(--accent);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Bloquear scroll cuando el login está visible */
+body.admin-locked {
+  overflow: hidden;
+}
+
+/* ============================== */
+/*  Panel de apariencia           */
+/* ============================== */
+.panel--wide {
+  grid-column: 1 / -1;
+}
+
+.appearance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1rem;
+}
+
+.appearance-full {
+  grid-column: 1 / -1;
+}
+
+.appearance-subtitle {
+  margin: 1.2rem 0 0.6rem;
+  color: var(--deep);
+  font-size: 1.1rem;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.color-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: #faf7ef;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.color-field span {
+  flex: 1;
+}
+
+.color-field input[type="color"] {
+  width: 38px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc2af;
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+}
+
+@media (max-width: 540px) {
+  .appearance-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================== */
+/*  Subida de imágenes            */
+/* ============================== */
+.upload-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.6rem 0;
+}
+
+.upload-preview-item {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #f0ece3;
+}
+
+.upload-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.upload-preview-item .upload-preview-status {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.15rem;
+  text-transform: uppercase;
+}
+
+.upload-preview-item.is-uploading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(1px);
+}
+
+.upload-preview-item.is-done .upload-preview-status {
+  background: rgba(31, 157, 116, 0.85);
+}
+
+.upload-preview-item.is-error .upload-preview-status {
+  background: rgba(212, 53, 28, 0.85);
+}
+
+.upload-status {
+  font-size: 0.82rem;
+  margin: 0.4rem 0 0;
+  color: #555;
+  min-height: 1rem;
+}
+
+.uploaded-paths {
+  margin-top: 0.8rem;
+  padding: 0.7rem;
+  background: #faf7ef;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+}
+
+.uploaded-paths[hidden] {
+  display: none;
+}
+
+.uploaded-paths-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--deep);
+}
+
+.uploaded-paths textarea {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  margin: 0 0 0.5rem;
+}
+
+/* ============================== */
+/*  Formulario de producto        */
+/* ============================== */
+.product-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1rem;
+}
+
+.product-form-full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 540px) {
+  .product-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Botón de agregar imágenes (file input estilizado) */
+.product-images-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.img-pick-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 0;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.img-pick-btn:hover {
+  background: var(--accent-dark);
+}
+
+.img-pick-btn input[type="file"] {
+  display: none;
+}
+
+/* Lista de imágenes del producto */
+.product-images-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.6rem 0 0.8rem;
+  min-height: 0;
+}
+
+.product-images-list:empty {
+  display: none;
+}
+
+.product-image-item {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #f0ece3;
+  flex-shrink: 0;
+}
+
+.product-image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.product-image-item .remove-img {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.product-image-item .remove-img:hover {
+  background: #d4351c;
+}
+
+.product-image-item.is-uploading::after {
+  content: "Subiendo...";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--deep);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.product-image-item.is-error::after {
+  content: "Error";
+  position: absolute;
+  inset: 0;
+  background: rgba(212, 53, 28, 0.85);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Configuración de acciones (botones) por producto */
+.actions-config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.action-config-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  background: #faf7ef;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.action-config-item input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+.action-config-item input[type="text"] {
+  flex: 1;
+  margin: 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.88rem;
+  border-radius: 6px;
+}
+
+.action-config-item .action-config-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  min-width: 70px;
+  color: var(--deep);
+}
+
+
+/* ============================================
+   ADMIN LOGIN
+   ============================================ */
+.admin-login {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(31, 59, 56, 0.92), rgba(18, 18, 18, 0.92));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+  padding: 1rem;
+  animation: reveal 0.4s ease-out both;
+}
+
+.admin-login-card {
+  background: var(--card);
+  border-radius: 22px;
+  padding: 2rem 1.6rem;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  border: 1px solid var(--line);
+}
+
+.admin-login-logo {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.admin-login-card h2 {
+  color: var(--deep);
+  font-size: 2rem;
+  margin-bottom: 0.4rem;
+}
+
+.admin-login-card p {
+  margin: 0 0 1.2rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.admin-login form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.admin-login input {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 1.1rem;
+  text-align: center;
+  letter-spacing: 0.3em;
+  font-family: inherit;
+  background: #fdfbf6;
+}
+
+.admin-login input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.admin-login button {
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+}
+
+.admin-login-error {
+  color: #c0392b;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ============================================
+   PANEL APARIENCIA
+   ============================================ */
+.panel--wide {
+  grid-column: 1 / -1;
+}
+
+.appearance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.appearance-section {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.8rem 1rem 1rem;
+  margin: 0;
+  background: #fbf8f1;
+}
+
+.appearance-section legend {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--deep);
+  padding: 0 0.4rem;
+}
+
+.color-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.color-row:last-of-type {
+  border-bottom: 0;
+}
+
+.color-row span {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.color-row input[type="color"] {
+  width: 52px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 2px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.appearance-hint {
+  font-size: 0.78rem;
+  color: #666;
+  margin: 0.6rem 0 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+  .appearance-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   UPLOADER DE IMAGENES
+   ============================================ */
+.upload-block {
+  margin: 0.8rem 0;
+  padding: 0.9rem;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  background: #fbf8f1;
+}
+
+.upload-label {
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  font-size: 0.92rem;
+  color: var(--deep);
+}
+
+.upload-status {
+  font-size: 0.82rem;
+  margin: 0.4rem 0 0;
+  color: #444;
+  min-height: 1em;
+}
+
+.upload-previews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.upload-preview {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.upload-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-preview-status {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 2px 4px;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.upload-preview-status.ok {
+  background: rgba(31, 157, 116, 0.85);
+}
+
+.upload-preview-status.err {
+  background: rgba(192, 57, 43, 0.85);
+}
