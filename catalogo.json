@@ -57,6 +57,24 @@
       "name": "Ropa",
       "products": [
         {
+          "name": "Oasics",
+          "price": 260,
+          "details": [
+            "10/10",
+            "Talla 44",
+            "Envío a todos los departamentos"
+          ],
+          "defaultAction": "consultar",
+          "productStatus": "activo",
+          "enabledActions": [
+            "consultar",
+            "reservar",
+            "comprar"
+          ],
+          "customActionLabels": {},
+          "image": "assets/images/d8ed1303-6f75-48c9-b030-a3dc2641f020-mpbko0g7t4g.jpg"
+        },
+        {
           "name": "Zapatillas Adiddas",
           "price": 350,
           "details": [
