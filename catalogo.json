@@ -53,37 +53,6 @@
   },
   "catalogs": [
     {
-      "id": "ropa",
-      "name": "Ropa",
-      "products": []
-    },
-    {
-      "id": "accesorios",
-      "name": "Accesorios",
-      "products": [
-        {
-          "name": "Reloj Minimal Steel",
-          "price": 45990,
-          "oldPrice": 55990,
-          "image": "https://placehold.co/1200x750/png?text=Reloj+Minimal+Steel",
-          "details": [
-            "Acero inoxidable",
-            "Resistente al agua",
-            "Garantia 6 meses"
-          ],
-          "ctaText": "Comprar por WhatsApp",
-          "defaultAction": "comprar",
-          "enabledActions": [
-            "consultar",
-            "reservar",
-            "quiero",
-            "comprar"
-          ],
-          "customActionLabels": {}
-        }
-      ]
-    },
-    {
       "id": "calzado-deportivo",
       "name": "Calzado Deportivo",
       "products": [
@@ -143,6 +112,37 @@
           ],
           "customActionLabels": {},
           "image": "assets/images/d8ed1303-6f75-48c9-b030-a3dc2641f020-mpbko0g7t4g.jpg"
+        }
+      ]
+    },
+    {
+      "id": "ropa",
+      "name": "Ropa",
+      "products": []
+    },
+    {
+      "id": "accesorios",
+      "name": "Accesorios",
+      "products": [
+        {
+          "name": "Reloj Minimal Steel",
+          "price": 45990,
+          "oldPrice": 55990,
+          "image": "https://placehold.co/1200x750/png?text=Reloj+Minimal+Steel",
+          "details": [
+            "Acero inoxidable",
+            "Resistente al agua",
+            "Garantia 6 meses"
+          ],
+          "ctaText": "Comprar por WhatsApp",
+          "defaultAction": "comprar",
+          "enabledActions": [
+            "consultar",
+            "reservar",
+            "quiero",
+            "comprar"
+          ],
+          "customActionLabels": {}
         }
       ]
     }
