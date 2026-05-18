@@ -88,6 +88,26 @@
       "name": "Calzado Deportivo",
       "products": [
         {
+          "name": "Nike",
+          "price": 350,
+          "details": [
+            "10/10",
+            "Talla 40",
+            "Zapatillas running",
+            "Envío en 24 horas"
+          ],
+          "defaultAction": "consultar",
+          "productStatus": "activo",
+          "enabledActions": [
+            "consultar",
+            "reservar",
+            "comprar"
+          ],
+          "customActionLabels": {},
+          "oldPrice": 370,
+          "image": "assets/images/f5f04a01-bc07-4083-8113-77a89b0f5ea5-mpbkxmhfy2v.jpg"
+        },
+        {
           "name": "Adiddas",
           "price": 350,
           "details": [
@@ -127,5 +147,5 @@
       ]
     }
   ],
-  "activeCatalogId": "ropa"
+  "activeCatalogId": "calzado-deportivo"
 }
