@@ -57,25 +57,23 @@
       "name": "Ropa",
       "products": [
         {
-          "name": "Camisa Cuadros",
-          "price": 39990,
-          "oldPrice": 49990,
-          "image": "assets/images/camisa_cuadros.webp",
+          "name": "Zapatillas Adiddas",
+          "price": 350,
           "details": [
-            "Algodon premium",
-            "Talles S al XL",
-            "Envio en 24 horas"
+            "10/10",
+            "Zapatillas running",
+            "Envío en 24 horas"
           ],
-          "ctaText": "Consultar talle",
           "defaultAction": "consultar",
           "productStatus": "activo",
           "enabledActions": [
             "consultar",
             "reservar",
-            "quiero",
             "comprar"
           ],
-          "customActionLabels": {}
+          "customActionLabels": {},
+          "oldPrice": 370,
+          "image": "assets/images/bc50b808-231c-47c5-a331-195e542d35f7-mpbk1cq1xx2.jpg"
         }
       ]
     },
