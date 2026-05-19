@@ -48,7 +48,7 @@
           "alignY": "middle"
         },
         "mobile": {
-          "size": 110,
+          "size": 70,
           "alignX": "center",
           "alignY": "middle"
         }
@@ -64,7 +64,7 @@
           "alignY": "middle"
         },
         "mobile": {
-          "size": 150,
+          "size": 70,
           "alignX": "center",
           "alignY": "middle"
         }
