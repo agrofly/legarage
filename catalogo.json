@@ -87,10 +87,11 @@
           "image": "assets/images/f5f04a01-bc07-4083-8113-77a89b0f5ea5-mpbkxmhfy2v.jpg"
         },
         {
-          "name": "Adiddas",
+          "name": "Adidas Celestes T42",
           "price": 350,
           "details": [
-            "10/10",
+            "9.5/10",
+            "Talla 42",
             "Zapatillas running",
             "Envío en 24 horas"
           ],
@@ -157,5 +158,5 @@
       ]
     }
   ],
-  "activeCatalogId": "ropa"
+  "activeCatalogId": "calzado-deportivo"
 }
