@@ -43,7 +43,7 @@
       "visible": true,
       "layout": {
         "desktop": {
-          "size": 100,
+          "size": 150,
           "alignX": "center",
           "alignY": "middle"
         },
@@ -59,7 +59,7 @@
       "visible": true,
       "layout": {
         "desktop": {
-          "size": 120,
+          "size": 170,
           "alignX": "center",
           "alignY": "middle"
         },
