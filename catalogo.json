@@ -1,5 +1,5 @@
 {
-  "brand": "LE GARAGE",
+  "brand": "ZonaPeak",
   "currency": {
     "locale": "es-BO",
     "code": "BOB",
@@ -36,7 +36,7 @@
     "quiero": "Hola! Lo quiero: {producto} por {precio}.",
     "comprar": "Hola! Quiero comprar {producto} por {precio}."
   },
-  "metaDescription": "Promociones con stock limitado. Consulta detalles, precios y compra por WhatsApp en minutos.",
+  "metaDescription": "Promociones con stock limitado. Eliges y consulta detalles, precios y compra por WhatsApp en minutos.",
   "theme": {
     "bg": "#f5f2e9",
     "ink": "#121212",
