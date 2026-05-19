@@ -718,23 +718,32 @@ function applyTexts() {
 }
 
 function applyLogos() {
-  const logos = state.logos || DEFAULT_LOGOS;
-  if (brandLogo1El) {
-    if (logos.logo1.visible && logos.logo1.src) {
-      brandLogo1El.src = logos.logo1.src;
-      brandLogo1El.style.display = "";
+  const logos = normalizeLogos(state.logos);
+
+  const setLogo = (el, cfg) => {
+    if (!el) return;
+    if (cfg.visible && cfg.src) {
+      // Si la imagen falla al cargar, esconder el elemento
+      el.onerror = () => {
+        console.warn(`Logo no encontrado: ${cfg.src}`);
+        el.style.display = "none";
+      };
+      el.onload = () => {
+        el.style.display = "";
+      };
+      // Solo cambiar src si difiere (evita re-fetch innecesario)
+      if (el.getAttribute("src") !== cfg.src) {
+        el.src = cfg.src;
+      } else {
+        el.style.display = "";
+      }
     } else {
-      brandLogo1El.style.display = "none";
+      el.style.display = "none";
     }
-  }
-  if (brandLogo2El) {
-    if (logos.logo2.visible && logos.logo2.src) {
-      brandLogo2El.src = logos.logo2.src;
-      brandLogo2El.style.display = "";
-    } else {
-      brandLogo2El.style.display = "none";
-    }
-  }
+  };
+
+  setLogo(brandLogo1El, logos.logo1);
+  setLogo(brandLogo2El, logos.logo2);
 }
 
 function renderLogoPreview(which) {
@@ -1066,7 +1075,7 @@ function bindProductImages() {
     const token = localStorage.getItem("githubToken");
     const repo = getGithubRepo();
     if (!token) {
-      if (statusEl) statusEl.textContent = "Guarda primero el token de GitHub (panel 3).";
+      if (statusEl) statusEl.textContent = "Guarda primero el token de GitHub (panel 5).";
       return;
     }
 
@@ -1163,7 +1172,7 @@ function bindLogoControls() {
         const token = localStorage.getItem("githubToken");
         const repo = getGithubRepo();
         if (!token) {
-          if (statusEl) statusEl.textContent = "Guarda primero el token de GitHub (panel 3).";
+          if (statusEl) statusEl.textContent = "Guarda primero el token de GitHub (panel 5).";
           return;
         }
 
