@@ -19,7 +19,7 @@
     "waSuffix": "por WhatsApp",
     "active": "Oferta activa",
     "sold": "Vendido",
-    "out": "Remate",
+    "out": "Agotado",
     "noImage": "Sin imagen",
     "updatedPrefix": "Catalogo actualizado:",
     "waFloat": "WhatsApp"
@@ -39,8 +39,8 @@
   "metaDescription": "Promociones con stock limitado. Eliges y consulta detalles, precios y compra por WhatsApp en minutos.",
   "logos": {
     "logo1": {
-      "src": "",
-      "visible": false
+      "src": "assets/brand/logo1-zonepeak-logo-mpcpj35xs2z.webp",
+      "visible": true
     },
     "logo2": {
       "src": "assets/brand/logo2-logo-mpcojotwbyi.webp",
