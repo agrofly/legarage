@@ -43,12 +43,12 @@
       "visible": true,
       "layout": {
         "desktop": {
-          "size": 80,
+          "size": 60,
           "alignX": "center",
           "alignY": "middle"
         },
         "mobile": {
-          "size": 60,
+          "size": 40,
           "alignX": "center",
           "alignY": "middle"
         }
