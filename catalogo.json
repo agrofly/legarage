@@ -37,6 +37,16 @@
     "comprar": "Hola! Quiero comprar {producto} por {precio}."
   },
   "metaDescription": "Promociones con stock limitado. Eliges y consulta detalles, precios y compra por WhatsApp en minutos.",
+  "logos": {
+    "logo1": {
+      "src": "",
+      "visible": false
+    },
+    "logo2": {
+      "src": "assets/brand/logo2-zonapeak-mpcoidkebzz.webp",
+      "visible": true
+    }
+  },
   "theme": {
     "bg": "#f5f2e9",
     "ink": "#121212",
