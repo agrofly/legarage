@@ -64,7 +64,7 @@
   "catalogs": [
     {
       "id": "calzado-deportivo",
-      "name": "Calzado masculino running",
+      "name": "Calzado Masculino Running",
       "products": [
         {
           "name": "Nike Blancas Talla 40",
@@ -127,7 +127,7 @@
     },
     {
       "id": "ropa",
-      "name": "Ropa",
+      "name": "Calzado Femenino Running",
       "products": []
     },
     {
@@ -157,5 +157,5 @@
       ]
     }
   ],
-  "activeCatalogId": "calzado-deportivo"
+  "activeCatalogId": "ropa"
 }
