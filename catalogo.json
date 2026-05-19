@@ -39,16 +39,16 @@
   "metaDescription": "Promociones con stock limitado. Eliges y consulta detalles, precios y compra por WhatsApp en minutos.",
   "logos": {
     "logo1": {
-      "src": "assets/brand/logo1-zonepeak-logo-mpcsdk07fan.webp",
+      "src": "assets/brand/logo1-logotransparente-mpcsf1dh7pu.webp",
       "visible": true,
       "layout": {
         "desktop": {
-          "size": 120,
+          "size": 80,
           "alignX": "center",
           "alignY": "middle"
         },
         "mobile": {
-          "size": 90,
+          "size": 60,
           "alignX": "center",
           "alignY": "middle"
         }
