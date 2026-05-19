@@ -43,12 +43,12 @@
       "visible": true,
       "layout": {
         "desktop": {
-          "size": 60,
+          "size": 100,
           "alignX": "center",
           "alignY": "middle"
         },
         "mobile": {
-          "size": 40,
+          "size": 110,
           "alignX": "center",
           "alignY": "middle"
         }
@@ -59,12 +59,12 @@
       "visible": true,
       "layout": {
         "desktop": {
-          "size": 80,
+          "size": 120,
           "alignX": "center",
           "alignY": "middle"
         },
         "mobile": {
-          "size": 60,
+          "size": 120,
           "alignX": "center",
           "alignY": "middle"
         }
@@ -108,7 +108,9 @@
           ],
           "customActionLabels": {},
           "oldPrice": 370,
-          "image": "assets/images/f5f04a01-bc07-4083-8113-77a89b0f5ea5-mpbkxmhfy2v.jpg"
+          "image": "assets/images/f5f04a01-bc07-4083-8113-77a89b0f5ea5-mpbkxmhfy2v.jpg",
+          "sizes": [],
+          "colors": []
         },
         {
           "name": "Adidas Celestes T42",
@@ -128,7 +130,9 @@
           ],
           "customActionLabels": {},
           "oldPrice": 370,
-          "image": "assets/images/bc50b808-231c-47c5-a331-195e542d35f7-mpbk1cq1xx2.jpg"
+          "image": "assets/images/bc50b808-231c-47c5-a331-195e542d35f7-mpbk1cq1xx2.jpg",
+          "sizes": [],
+          "colors": []
         },
         {
           "name": "Oasics Blancas con verde T 44",
@@ -147,7 +151,9 @@
           ],
           "customActionLabels": {},
           "oldPrice": 280,
-          "image": "assets/images/d8ed1303-6f75-48c9-b030-a3dc2641f020-mpbko0g7t4g.jpg"
+          "image": "assets/images/d8ed1303-6f75-48c9-b030-a3dc2641f020-mpbko0g7t4g.jpg",
+          "sizes": [],
+          "colors": []
         }
       ]
     },
@@ -178,7 +184,9 @@
             "quiero",
             "comprar"
           ],
-          "customActionLabels": {}
+          "customActionLabels": {},
+          "sizes": [],
+          "colors": []
         }
       ]
     }
