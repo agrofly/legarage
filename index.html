@@ -47,13 +47,15 @@
     </div>
 
     <header class="hero">
-      <div class="brand-logo-wrap">
+      <div class="brand-logo-wrap" id="brandLogoWrap">
         <img
+          id="brandLogo1"
           src="assets/brand/logo-legarage.png"
           alt="LeGarage"
           class="brand-logo"
         />
         <img
+          id="brandLogo2"
           src="assets/brand/sim-logo-legarage.webp"
           alt="LeGarage"
           class="brand-logo"
@@ -89,6 +91,51 @@
           <!-- Panel 0: Apariencia y textos -->
           <article class="panel panel--wide">
             <h3>0) Apariencia y textos</h3>
+
+            <h4 class="appearance-subtitle">Logos del encabezado</h4>
+            <div class="logos-grid">
+              <div class="logo-config">
+                <p class="logo-config-title">Logo principal (grande)</p>
+                <div class="logo-preview-row">
+                  <div class="logo-preview" id="logo1Preview">
+                    <span class="logo-preview-empty">Sin logo</span>
+                  </div>
+                  <div class="logo-config-actions">
+                    <label class="img-pick-btn">
+                      <input type="file" id="logo1Picker" accept="image/*" hidden />
+                      <span>📷 Cambiar</span>
+                    </label>
+                    <label class="logo-toggle">
+                      <input type="checkbox" id="logo1Visible" />
+                      <span>Mostrar</span>
+                    </label>
+                    <button type="button" id="logo1RemoveBtn" class="ghost">Quitar imagen</button>
+                  </div>
+                </div>
+                <p id="logo1Status" class="upload-status"></p>
+              </div>
+
+              <div class="logo-config">
+                <p class="logo-config-title">Logo secundario (chico)</p>
+                <div class="logo-preview-row">
+                  <div class="logo-preview" id="logo2Preview">
+                    <span class="logo-preview-empty">Sin logo</span>
+                  </div>
+                  <div class="logo-config-actions">
+                    <label class="img-pick-btn">
+                      <input type="file" id="logo2Picker" accept="image/*" hidden />
+                      <span>📷 Cambiar</span>
+                    </label>
+                    <label class="logo-toggle">
+                      <input type="checkbox" id="logo2Visible" />
+                      <span>Mostrar</span>
+                    </label>
+                    <button type="button" id="logo2RemoveBtn" class="ghost">Quitar imagen</button>
+                  </div>
+                </div>
+                <p id="logo2Status" class="upload-status"></p>
+              </div>
+            </div>
 
             <h4 class="appearance-subtitle">Encabezado (Hero)</h4>
             <div class="appearance-grid">

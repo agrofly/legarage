@@ -61,6 +61,12 @@ const DEFAULT_LABELS = {
 const DEFAULT_META_DESCRIPTION =
   "Promociones con stock limitado. Consulta detalles, precios y compra por WhatsApp en minutos.";
 
+// Configuración default de logos del header
+const DEFAULT_LOGOS = {
+  logo1: { src: "assets/brand/logo-legarage.png", visible: true },
+  logo2: { src: "assets/brand/sim-logo-legarage.webp", visible: true },
+};
+
 // Elementos del DOM
 const heroTextEl = document.getElementById("heroText");
 const updatedAtEl = document.getElementById("updatedAt");
@@ -76,6 +82,8 @@ const sectionTitleEl = document.getElementById("sectionTitle");
 const sectionSubtitleEl = document.getElementById("sectionSubtitle");
 const adminLoginEl = document.getElementById("adminLogin");
 const metaDescriptionEl = document.getElementById("metaDescription");
+const brandLogo1El = document.getElementById("brandLogo1");
+const brandLogo2El = document.getElementById("brandLogo2");
 
 const isAdminView = new URLSearchParams(window.location.search).get("admin") === "1";
 
@@ -232,6 +240,22 @@ function normalizeStringMap(raw, defaults) {
   return out;
 }
 
+function normalizeLogos(raw) {
+  const out = {
+    logo1: { ...DEFAULT_LOGOS.logo1 },
+    logo2: { ...DEFAULT_LOGOS.logo2 },
+  };
+  if (raw && typeof raw === "object") {
+    for (const key of ["logo1", "logo2"]) {
+      if (raw[key] && typeof raw[key] === "object") {
+        if (typeof raw[key].src === "string") out[key].src = raw[key].src;
+        if (typeof raw[key].visible === "boolean") out[key].visible = raw[key].visible;
+      }
+    }
+  }
+  return out;
+}
+
 function normalizeData(raw) {
   if (!raw || typeof raw !== "object") {
     throw new Error("El JSON debe ser un objeto.");
@@ -248,6 +272,7 @@ function normalizeData(raw) {
     metaDescription: typeof raw.metaDescription === "string" && raw.metaDescription
       ? raw.metaDescription
       : DEFAULT_META_DESCRIPTION,
+    logos: normalizeLogos(raw.logos),
     theme: normalizeTheme(raw.theme),
     contact: {
       whatsapp: raw.contact?.whatsapp || "",
@@ -692,6 +717,41 @@ function applyTexts() {
   if (metaDescriptionEl) metaDescriptionEl.setAttribute("content", state.metaDescription || DEFAULT_META_DESCRIPTION);
 }
 
+function applyLogos() {
+  const logos = state.logos || DEFAULT_LOGOS;
+  if (brandLogo1El) {
+    if (logos.logo1.visible && logos.logo1.src) {
+      brandLogo1El.src = logos.logo1.src;
+      brandLogo1El.style.display = "";
+    } else {
+      brandLogo1El.style.display = "none";
+    }
+  }
+  if (brandLogo2El) {
+    if (logos.logo2.visible && logos.logo2.src) {
+      brandLogo2El.src = logos.logo2.src;
+      brandLogo2El.style.display = "";
+    } else {
+      brandLogo2El.style.display = "none";
+    }
+  }
+}
+
+function renderLogoPreview(which) {
+  const previewEl = document.getElementById(`${which}Preview`);
+  const visibleCb = document.getElementById(`${which}Visible`);
+  if (!previewEl) return;
+  const logos = state.logos || DEFAULT_LOGOS;
+  const cfg = logos[which];
+
+  if (cfg.src) {
+    previewEl.innerHTML = `<img src="${escapeHtml(cfg.src)}" alt="${which}" />`;
+  } else {
+    previewEl.innerHTML = `<span class="logo-preview-empty">Sin logo</span>`;
+  }
+  if (visibleCb) visibleCb.checked = !!cfg.visible;
+}
+
 function fillAppearancePanel() {
   if (!isAdminView || !isAdminAuthenticated()) return;
   const texts = state.texts || DEFAULT_TEXTS;
@@ -750,6 +810,10 @@ function fillAppearancePanel() {
   setVal("colorCard", theme.card);
   setVal("colorLine", theme.line);
   setVal("colorOk", theme.ok);
+
+  // Logos
+  renderLogoPreview("logo1");
+  renderLogoPreview("logo2");
 }
 
 function render() {
@@ -758,6 +822,7 @@ function render() {
 
   applyTheme();
   applyTexts();
+  applyLogos();
 
   heroTextEl.textContent = state.heroText || "";
   footerTextEl.textContent = state.contact?.footerMessage || "";
@@ -1059,6 +1124,84 @@ function bindProductImages() {
 }
 
 // ============================================================
+//  Panel de logos del header (subir / mostrar / quitar)
+// ============================================================
+function bindLogoControls() {
+  ["logo1", "logo2"].forEach((which) => {
+    const picker = document.getElementById(`${which}Picker`);
+    const visibleCb = document.getElementById(`${which}Visible`);
+    const removeBtn = document.getElementById(`${which}RemoveBtn`);
+    const statusEl = document.getElementById(`${which}Status`);
+
+    if (visibleCb) {
+      visibleCb.addEventListener("change", () => {
+        if (!state.logos) state.logos = normalizeLogos();
+        state.logos[which].visible = visibleCb.checked;
+        saveData();
+        applyLogos();
+        showMessage(`Logo ${which === "logo1" ? "principal" : "secundario"} ${visibleCb.checked ? "visible" : "oculto"}.`);
+      });
+    }
+
+    if (removeBtn) {
+      removeBtn.addEventListener("click", () => {
+        if (!state.logos) state.logos = normalizeLogos();
+        state.logos[which].src = "";
+        saveData();
+        applyLogos();
+        renderLogoPreview(which);
+        if (statusEl) statusEl.textContent = "Imagen quitada.";
+      });
+    }
+
+    if (picker) {
+      picker.addEventListener("change", async (event) => {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file) return;
+
+        const token = localStorage.getItem("githubToken");
+        const repo = getGithubRepo();
+        if (!token) {
+          if (statusEl) statusEl.textContent = "Guarda primero el token de GitHub (panel 3).";
+          return;
+        }
+
+        if (statusEl) statusEl.textContent = "Comprimiendo y subiendo...";
+
+        try {
+          const { blob, mime } = await compressImage(file);
+          const filename = buildImageFileName(`${which}-${file.name}`, mime);
+          // Los logos van a assets/brand/ no a assets/images/
+          const path = `assets/brand/${filename}`;
+          const base64 = await blobToBase64(blob);
+
+          await uploadFileToGithub({
+            path,
+            contentBase64: base64,
+            token,
+            repo,
+            message: `subo ${filename} (${which}) desde admin`,
+          });
+
+          if (!state.logos) state.logos = normalizeLogos();
+          state.logos[which].src = path;
+          state.logos[which].visible = true;
+          saveData();
+          applyLogos();
+          renderLogoPreview(which);
+
+          const kb = Math.round(blob.size / 1024);
+          if (statusEl) statusEl.textContent = `Subido (${kb} KB) — ${filename}`;
+        } catch (error) {
+          if (statusEl) statusEl.textContent = `Error: ${error.message}`;
+        }
+      });
+    }
+  });
+}
+
+// ============================================================
 //  Panel de apariencia (textos + colores)
 // ============================================================
 function bindAppearancePanel() {
@@ -1197,6 +1340,7 @@ function bindAdminEvents() {
   // Sub-modules
   bindAppearancePanel();
   bindProductImages();
+  bindLogoControls();
 
   // Inicializar config de acciones del producto vacío
   renderProductActionsConfig({ enabledActions: [...ACTION_KEYS] });

@@ -931,6 +931,106 @@ body.admin-locked {
   color: var(--deep);
 }
 
+/* ============================== */
+/*  Configuración de logos        */
+/* ============================== */
+.logos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .logos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.logo-config {
+  background: #faf7ef;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.8rem;
+}
+
+.logo-config-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0 0 0.6rem;
+  color: var(--deep);
+}
+
+.logo-preview-row {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+
+.logo-preview {
+  width: 120px;
+  height: 80px;
+  border-radius: 10px;
+  background: var(--deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+  padding: 6px;
+}
+
+.logo-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.logo-preview-empty {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.logo-config-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.logo-config-actions .img-pick-btn {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.7rem;
+  justify-content: center;
+}
+
+.logo-config-actions .ghost {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.6rem;
+  margin: 0;
+}
+
+.logo-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0;
+  cursor: pointer;
+  color: var(--deep);
+}
+
+.logo-toggle input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+  margin: 0;
+}
+
 
 /* ============================================
    ADMIN LOGIN
