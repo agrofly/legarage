@@ -19,7 +19,7 @@
     "waSuffix": "por WhatsApp",
     "active": "Oferta activa",
     "sold": "Vendido",
-    "out": "Agotado",
+    "out": "Remate",
     "noImage": "Sin imagen",
     "updatedPrefix": "Catalogo actualizado:",
     "waFloat": "WhatsApp"
@@ -107,7 +107,7 @@
           "image": "assets/images/bc50b808-231c-47c5-a331-195e542d35f7-mpbk1cq1xx2.jpg"
         },
         {
-          "name": "Oasics",
+          "name": "Oasics Blancas con verde T 44",
           "price": 260,
           "details": [
             "10/10",
@@ -115,13 +115,14 @@
             "Envío a todos los departamentos"
           ],
           "defaultAction": "consultar",
-          "productStatus": "activo",
+          "productStatus": "vendido",
           "enabledActions": [
             "consultar",
             "reservar",
             "comprar"
           ],
           "customActionLabels": {},
+          "oldPrice": 280,
           "image": "assets/images/d8ed1303-6f75-48c9-b030-a3dc2641f020-mpbko0g7t4g.jpg"
         }
       ]
