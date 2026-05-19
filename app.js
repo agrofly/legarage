@@ -62,9 +62,26 @@ const DEFAULT_META_DESCRIPTION =
   "Promociones con stock limitado. Consulta detalles, precios y compra por WhatsApp en minutos.";
 
 // Configuración default de logos del header
+const DEFAULT_LOGO_LAYOUT = {
+  desktop: { size: 120, alignX: "center", alignY: "middle" },
+  mobile: { size: 90, alignX: "center", alignY: "middle" },
+};
+const DEFAULT_LOGO2_LAYOUT = {
+  desktop: { size: 80, alignX: "center", alignY: "middle" },
+  mobile: { size: 60, alignX: "center", alignY: "middle" },
+};
+
 const DEFAULT_LOGOS = {
-  logo1: { src: "assets/brand/logo-legarage.png", visible: true },
-  logo2: { src: "assets/brand/sim-logo-legarage.webp", visible: true },
+  logo1: {
+    src: "assets/brand/logo-legarage.png",
+    visible: true,
+    layout: structuredClone(DEFAULT_LOGO_LAYOUT),
+  },
+  logo2: {
+    src: "assets/brand/sim-logo-legarage.webp",
+    visible: true,
+    layout: structuredClone(DEFAULT_LOGO2_LAYOUT),
+  },
 };
 
 // Elementos del DOM
@@ -91,10 +108,20 @@ if (!isAdminView && managerEl) {
   managerEl.remove();
 }
 
+// Token especial para la pestaña "Todas"
+const ALL_CATALOGS_ID = "__all__";
+
 let state = normalizeData(structuredClone(defaultData));
 
 // Imágenes del producto que se está editando (lista en memoria)
 let currentProductImages = [];
+
+// Filtros del cliente (vista pública)
+const clientFilters = {
+  search: "",
+  size: "",
+  color: "",
+};
 
 // ============================================================
 //  LOGIN ADMIN
@@ -213,7 +240,22 @@ function normalizeProduct(product) {
   p.customActionLabels = p.customActionLabels && typeof p.customActionLabels === "object"
     ? p.customActionLabels
     : {};
+
+  // Tallas y colores (arrays de strings)
+  p.sizes = parseTagList(p.sizes);
+  p.colors = parseTagList(p.colors);
+
   return p;
+}
+
+function parseTagList(raw) {
+  if (Array.isArray(raw)) {
+    return raw.map((v) => String(v).trim()).filter(Boolean);
+  }
+  if (typeof raw === "string" && raw.trim().length > 0) {
+    return raw.split(",").map((v) => v.trim()).filter(Boolean);
+  }
+  return [];
 }
 
 function normalizeTheme(raw) {
@@ -240,16 +282,42 @@ function normalizeStringMap(raw, defaults) {
   return out;
 }
 
+const VALID_ALIGN_X = ["left", "center", "right"];
+const VALID_ALIGN_Y = ["top", "middle", "bottom"];
+
+function normalizeLayout(raw, fallback) {
+  const out = structuredClone(fallback);
+  if (raw && typeof raw === "object") {
+    for (const dev of ["desktop", "mobile"]) {
+      if (raw[dev] && typeof raw[dev] === "object") {
+        const s = Number(raw[dev].size);
+        if (Number.isFinite(s) && s >= 10 && s <= 500) out[dev].size = Math.round(s);
+        if (VALID_ALIGN_X.includes(raw[dev].alignX)) out[dev].alignX = raw[dev].alignX;
+        if (VALID_ALIGN_Y.includes(raw[dev].alignY)) out[dev].alignY = raw[dev].alignY;
+      }
+    }
+  }
+  return out;
+}
+
 function normalizeLogos(raw) {
   const out = {
-    logo1: { ...DEFAULT_LOGOS.logo1 },
-    logo2: { ...DEFAULT_LOGOS.logo2 },
+    logo1: {
+      ...DEFAULT_LOGOS.logo1,
+      layout: structuredClone(DEFAULT_LOGO_LAYOUT),
+    },
+    logo2: {
+      ...DEFAULT_LOGOS.logo2,
+      layout: structuredClone(DEFAULT_LOGO2_LAYOUT),
+    },
   };
   if (raw && typeof raw === "object") {
     for (const key of ["logo1", "logo2"]) {
       if (raw[key] && typeof raw[key] === "object") {
         if (typeof raw[key].src === "string") out[key].src = raw[key].src;
         if (typeof raw[key].visible === "boolean") out[key].visible = raw[key].visible;
+        const fallback = key === "logo1" ? DEFAULT_LOGO_LAYOUT : DEFAULT_LOGO2_LAYOUT;
+        out[key].layout = normalizeLayout(raw[key].layout, fallback);
       }
     }
   }
@@ -309,8 +377,16 @@ function normalizeData(raw) {
   });
 
   const requestedActiveId = raw.activeCatalogId;
-  const activeExists = normalized.catalogs.some((c) => c.id === requestedActiveId);
-  normalized.activeCatalogId = activeExists ? requestedActiveId : normalized.catalogs[0].id;
+  const activeExists = requestedActiveId === ALL_CATALOGS_ID
+    || normalized.catalogs.some((c) => c.id === requestedActiveId);
+  if (activeExists) {
+    normalized.activeCatalogId = requestedActiveId;
+  } else if (normalized.catalogs.length > 1) {
+    // Si hay varios catalogos, "Todas" por defecto
+    normalized.activeCatalogId = ALL_CATALOGS_ID;
+  } else {
+    normalized.activeCatalogId = normalized.catalogs[0].id;
+  }
 
   return normalized;
 }
@@ -368,9 +444,62 @@ function getActiveCatalog() {
 }
 
 function setActiveCatalog(catalogId) {
-  if (state.catalogs.some((c) => c.id === catalogId)) {
+  if (catalogId === ALL_CATALOGS_ID || state.catalogs.some((c) => c.id === catalogId)) {
     state.activeCatalogId = catalogId;
   }
+}
+
+// Devuelve los productos según el catálogo activo (o todos si es __all__)
+function getProductsForView() {
+  if (state.activeCatalogId === ALL_CATALOGS_ID) {
+    return state.catalogs.flatMap((c) => c.products);
+  }
+  const cat = state.catalogs.find((c) => c.id === state.activeCatalogId);
+  return cat ? cat.products : [];
+}
+
+// Devuelve los productos filtrados por la barra de búsqueda y filtros
+function getFilteredProducts() {
+  const list = getProductsForView();
+  const q = clientFilters.search.toLowerCase().trim();
+  const size = clientFilters.size;
+  const color = clientFilters.color;
+
+  return list.filter((p) => {
+    // Búsqueda por texto: nombre o detalles
+    if (q) {
+      const hay = (p.name || "").toLowerCase().includes(q)
+        || (Array.isArray(p.details) ? p.details.join(" ").toLowerCase().includes(q) : false);
+      if (!hay) return false;
+    }
+    // Filtro talla
+    if (size) {
+      if (!Array.isArray(p.sizes) || !p.sizes.some((s) => s.toLowerCase() === size.toLowerCase())) {
+        return false;
+      }
+    }
+    // Filtro color
+    if (color) {
+      if (!Array.isArray(p.colors) || !p.colors.some((c) => c.toLowerCase() === color.toLowerCase())) {
+        return false;
+      }
+    }
+    return true;
+  });
+}
+
+// Devuelve todos los valores únicos de un atributo en los productos visibles (sin filtrar)
+function getUniqueAttrValues(attr) {
+  const list = getProductsForView();
+  const set = new Map();  // value normalized lowercase -> original casing
+  list.forEach((p) => {
+    const arr = Array.isArray(p[attr]) ? p[attr] : [];
+    arr.forEach((v) => {
+      const key = String(v).trim().toLowerCase();
+      if (key && !set.has(key)) set.set(key, String(v).trim());
+    });
+  });
+  return Array.from(set.values()).sort((a, b) => a.localeCompare(b, "es", { numeric: true }));
 }
 
 function getProductActionLabel(product, action) {
@@ -448,6 +577,24 @@ function createProductCard(product, index) {
       ? `<p class="old-price">${escapeHtml(beforeLabel)} ${formatMoney(product.oldPrice)}</p>`
       : "";
 
+  // Chips de talla / color (solo si hay valores)
+  const sizesArr = Array.isArray(product.sizes) ? product.sizes : [];
+  const colorsArr = Array.isArray(product.colors) ? product.colors : [];
+  const attrsParts = [];
+  if (sizesArr.length > 0) {
+    attrsParts.push(sizesArr.map((s) =>
+      `<span class="product-attr"><span class="product-attr-label">Talla</span>${escapeHtml(s)}</span>`
+    ).join(""));
+  }
+  if (colorsArr.length > 0) {
+    attrsParts.push(colorsArr.map((c) =>
+      `<span class="product-attr"><span class="product-attr-label">Color</span>${escapeHtml(c)}</span>`
+    ).join(""));
+  }
+  const attrsBlock = attrsParts.length > 0
+    ? `<div class="product-attrs">${attrsParts.join("")}</div>`
+    : "";
+
   const status = product.productStatus || (product.soldOut ? "vendido" : "activo");
   const isUnavailable = status === "vendido" || status === "agotado";
 
@@ -481,6 +628,7 @@ function createProductCard(product, index) {
       <h3>${escapeHtml(product.name)}</h3>
       ${oldPrice}
       <p class="price">${formatMoney(product.price)}</p>
+      ${attrsBlock}
       <ul>${details}</ul>
       ${actionsBlock}
       ${ctaMarkup}
@@ -489,13 +637,145 @@ function createProductCard(product, index) {
 }
 
 function renderCatalogTabs() {
-  const tabs = state.catalogs
-    .map((catalog) => {
-      const activeClass = catalog.id === state.activeCatalogId ? "catalog-tab active" : "catalog-tab";
-      return `<button type="button" class="${activeClass}" data-catalog-id="${escapeHtml(catalog.id)}">${escapeHtml(catalog.name)}</button>`;
-    })
-    .join("");
-  catalogTabsEl.innerHTML = tabs;
+  const tabs = [];
+  // Pestaña "Todas" al inicio (solo si hay más de 1 catálogo)
+  if (state.catalogs.length > 1) {
+    const activeAll = state.activeCatalogId === ALL_CATALOGS_ID;
+    tabs.push(`<button type="button" class="catalog-tab${activeAll ? " active" : ""}" data-catalog-id="${ALL_CATALOGS_ID}">Todas</button>`);
+  }
+  state.catalogs.forEach((catalog) => {
+    const activeClass = catalog.id === state.activeCatalogId ? "catalog-tab active" : "catalog-tab";
+    tabs.push(`<button type="button" class="${activeClass}" data-catalog-id="${escapeHtml(catalog.id)}">${escapeHtml(catalog.name)}</button>`);
+  });
+  catalogTabsEl.innerHTML = tabs.join("");
+}
+
+function renderFiltersBar() {
+  const bar = document.getElementById("filtersBar");
+  if (!bar) return;
+
+  // Construir dropdown de tallas
+  const sizes = getUniqueAttrValues("sizes");
+  const sizeSelect = document.getElementById("filterSize");
+  const sizeWrap = document.querySelector('.filter-select[data-filter="size"]');
+  if (sizeSelect && sizeWrap) {
+    if (sizes.length === 0) {
+      sizeWrap.hidden = true;
+      clientFilters.size = "";
+    } else {
+      sizeWrap.hidden = false;
+      sizeSelect.innerHTML = `<option value="">Todas</option>` + sizes.map((s) =>
+        `<option value="${escapeHtml(s)}" ${clientFilters.size === s ? "selected" : ""}>${escapeHtml(s)}</option>`
+      ).join("");
+    }
+  }
+
+  // Construir dropdown de colores
+  const colors = getUniqueAttrValues("colors");
+  const colorSelect = document.getElementById("filterColor");
+  const colorWrap = document.querySelector('.filter-select[data-filter="color"]');
+  if (colorSelect && colorWrap) {
+    if (colors.length === 0) {
+      colorWrap.hidden = true;
+      clientFilters.color = "";
+    } else {
+      colorWrap.hidden = false;
+      colorSelect.innerHTML = `<option value="">Todos</option>` + colors.map((c) =>
+        `<option value="${escapeHtml(c)}" ${clientFilters.color === c ? "selected" : ""}>${escapeHtml(c)}</option>`
+      ).join("");
+    }
+  }
+
+  // Sincronizar el campo de búsqueda
+  const searchInput = document.getElementById("filterSearch");
+  if (searchInput && searchInput.value !== clientFilters.search) {
+    searchInput.value = clientFilters.search;
+  }
+
+  // Botón limpiar
+  const clearBtn = document.getElementById("filterClearBtn");
+  if (clearBtn) {
+    clearBtn.hidden = clientFilters.search.length === 0;
+  }
+}
+
+function renderFilterCount(visibleCount, totalCount) {
+  const el = document.getElementById("filterResultCount");
+  if (!el) return;
+  const filtering = clientFilters.search || clientFilters.size || clientFilters.color;
+  if (!filtering) {
+    el.textContent = "";
+    return;
+  }
+  if (visibleCount === 0) {
+    el.innerHTML = `<strong>0</strong> productos coinciden con tu busqueda`;
+  } else {
+    el.innerHTML = `Mostrando <strong>${visibleCount}</strong> de ${totalCount} productos`;
+  }
+}
+
+function bindClientFilters() {
+  const searchInput = document.getElementById("filterSearch");
+  const sizeSelect = document.getElementById("filterSize");
+  const colorSelect = document.getElementById("filterColor");
+  const clearBtn = document.getElementById("filterClearBtn");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      clientFilters.search = searchInput.value;
+      if (clearBtn) clearBtn.hidden = clientFilters.search.length === 0;
+      renderProducts();
+    });
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      clientFilters.search = "";
+      if (searchInput) searchInput.value = "";
+      clearBtn.hidden = true;
+      renderProducts();
+    });
+  }
+  if (sizeSelect) {
+    sizeSelect.addEventListener("change", () => {
+      clientFilters.size = sizeSelect.value;
+      renderProducts();
+    });
+  }
+  if (colorSelect) {
+    colorSelect.addEventListener("change", () => {
+      clientFilters.color = colorSelect.value;
+      renderProducts();
+    });
+  }
+}
+
+// Renderiza la lista de productos (solo eso, no toda la página)
+function renderProducts() {
+  const all = getProductsForView();
+  const filtered = getFilteredProducts();
+
+  if (filtered.length === 0 && (clientFilters.search || clientFilters.size || clientFilters.color)) {
+    productsGridEl.innerHTML = `
+      <div class="filter-empty">
+        <p>No se encontraron productos con esos filtros.</p>
+        <button type="button" id="resetFiltersBtn">Limpiar filtros</button>
+      </div>
+    `;
+    const btn = document.getElementById("resetFiltersBtn");
+    if (btn) btn.addEventListener("click", () => {
+      clientFilters.search = "";
+      clientFilters.size = "";
+      clientFilters.color = "";
+      renderFiltersBar();
+      renderProducts();
+    });
+  } else {
+    productsGridEl.innerHTML = filtered
+      .map((p, i) => createProductCard(p, i))
+      .join("");
+  }
+
+  renderFilterCount(filtered.length, all.length);
 }
 
 function renderCatalogSelect() {
@@ -616,6 +896,8 @@ function collectProductFromForm() {
   const image = document.getElementById("image").value.trim();
   const defaultAction = normalizeActionKey(document.getElementById("defaultAction").value);
   const productStatus = document.getElementById("productStatus").value || "activo";
+  const sizesRaw = document.getElementById("sizes")?.value || "";
+  const colorsRaw = document.getElementById("colors")?.value || "";
 
   if (!name || !detailsRaw || Number.isNaN(price)) {
     throw new Error("Completa nombre, precio y detalles.");
@@ -655,6 +937,8 @@ function collectProductFromForm() {
     productStatus,
     enabledActions,
     customActionLabels,
+    sizes: parseTagList(sizesRaw),
+    colors: parseTagList(colorsRaw),
   };
 
   if (oldPriceValue) product.oldPrice = Number(oldPriceValue);
@@ -675,6 +959,10 @@ function fillFormWithProduct(product) {
   document.getElementById("defaultAction").value = normalizeActionKey(product.defaultAction);
   document.getElementById("productStatus").value =
     product.productStatus || (product.soldOut ? "vendido" : "activo");
+  const sizesEl = document.getElementById("sizes");
+  const colorsEl = document.getElementById("colors");
+  if (sizesEl) sizesEl.value = Array.isArray(product.sizes) ? product.sizes.join(", ") : "";
+  if (colorsEl) colorsEl.value = Array.isArray(product.colors) ? product.colors.join(", ") : "";
 
   renderProductActionsConfig(product);
   setProductImagesFromString(product.image || "");
@@ -717,25 +1005,49 @@ function applyTexts() {
   if (metaDescriptionEl) metaDescriptionEl.setAttribute("content", state.metaDescription || DEFAULT_META_DESCRIPTION);
 }
 
+function getCurrentDevice() {
+  return window.matchMedia("(max-width: 720px)").matches ? "mobile" : "desktop";
+}
+
+const ALIGN_X_FLEX = { left: "flex-start", center: "center", right: "flex-end" };
+const ALIGN_Y_FLEX = { top: "flex-start", middle: "center", bottom: "flex-end" };
+
 function applyLogos() {
   const logos = normalizeLogos(state.logos);
+  const device = getCurrentDevice();
 
   const setLogo = (el, cfg) => {
     if (!el) return;
     if (cfg.visible && cfg.src) {
-      // Si la imagen falla al cargar, esconder el elemento
+      // Tamaño
+      const size = cfg.layout?.[device]?.size || 120;
+      el.style.width = `${size}px`;
+      el.style.height = "auto";
+      el.style.maxWidth = "100%";
+
+      // Alineacion horizontal del logo dentro del wrap
+      const ax = cfg.layout?.[device]?.alignX || "center";
+      if (ax === "left") {
+        el.style.marginLeft = "0";
+        el.style.marginRight = "auto";
+      } else if (ax === "right") {
+        el.style.marginLeft = "auto";
+        el.style.marginRight = "0";
+      } else {
+        el.style.marginLeft = "auto";
+        el.style.marginRight = "auto";
+      }
+
+      // alineacion vertical aplicada al wrap por orden (top/middle/bottom)
+      el.dataset.alignY = cfg.layout?.[device]?.alignY || "middle";
+      el.style.display = "block";
+
       el.onerror = () => {
         console.warn(`Logo no encontrado: ${cfg.src}`);
         el.style.display = "none";
       };
-      el.onload = () => {
-        el.style.display = "";
-      };
-      // Solo cambiar src si difiere (evita re-fetch innecesario)
       if (el.getAttribute("src") !== cfg.src) {
         el.src = cfg.src;
-      } else {
-        el.style.display = "";
       }
     } else {
       el.style.display = "none";
@@ -744,7 +1056,24 @@ function applyLogos() {
 
   setLogo(brandLogo1El, logos.logo1);
   setLogo(brandLogo2El, logos.logo2);
+
+  // Aplicar alineacion vertical del wrap completo:
+  // Si ambos logos visibles, usar el alignY del logo1 (el primero) como guía global
+  const wrap = document.getElementById("brandLogoWrap");
+  if (wrap) {
+    const ay = logos.logo1.visible && logos.logo1.src
+      ? (logos.logo1.layout?.[device]?.alignY || "middle")
+      : (logos.logo2.layout?.[device]?.alignY || "middle");
+    wrap.style.display = "flex";
+    wrap.style.flexDirection = "column";
+    wrap.style.justifyContent = ALIGN_Y_FLEX[ay] || "center";
+  }
 }
+
+// Re-aplicar logos si cambia el tamaño de la ventana (PC ↔ celular)
+window.addEventListener("resize", () => {
+  if (state && state.logos) applyLogos();
+});
 
 function renderLogoPreview(which) {
   const previewEl = document.getElementById(`${which}Preview`);
@@ -823,6 +1152,7 @@ function fillAppearancePanel() {
   // Logos
   renderLogoPreview("logo1");
   renderLogoPreview("logo2");
+  refreshLogoLayoutUI();
 }
 
 function render() {
@@ -840,9 +1170,8 @@ function render() {
   waFloatEl.href = `https://wa.me/${state.contact.whatsapp}`;
 
   renderCatalogTabs();
-  productsGridEl.innerHTML = activeCatalog.products
-    .map((p, i) => createProductCard(p, i))
-    .join("");
+  renderFiltersBar();
+  renderProducts();
 
   if (isAdminView && isAdminAuthenticated()) {
     renderCatalogSelect();
@@ -876,8 +1205,14 @@ function bindCommonEvents() {
     const catalogId = button.dataset.catalogId;
     if (!catalogId) return;
     setActiveCatalog(catalogId);
+    // Al cambiar de categoría, resetear filtros (los valores pueden no aplicar)
+    clientFilters.size = "";
+    clientFilters.color = "";
     render();
   });
+
+  // Bind filtros del cliente (solo una vez al inicio)
+  bindClientFilters();
 
   productsGridEl.addEventListener("change", (event) => {
     const input = event.target;
@@ -886,7 +1221,8 @@ function bindCommonEvents() {
     const card = input.closest(".product-card");
     if (!card) return;
     const cardIndex = Number(card.dataset.productIndex);
-    const product = getActiveCatalog().products[cardIndex];
+    // Usar el mismo array filtrado que se usó para renderizar
+    const product = getFilteredProducts()[cardIndex];
     if (!product) return;
     const action = normalizeActionKey(input.value);
     const cta = card.querySelector(".card-cta");
@@ -1133,6 +1469,114 @@ function bindProductImages() {
 }
 
 // ============================================================
+//  Controles de POSICION Y TAMAÑO de logos (PC / Celular)
+// ============================================================
+// Rangos de tamaño por logo y dispositivo
+const LOGO_SIZE_RANGES = {
+  logo1: { desktop: { min: 40, max: 300 }, mobile: { min: 30, max: 220 } },
+  logo2: { desktop: { min: 30, max: 200 }, mobile: { min: 20, max: 150 } },
+};
+
+// Track qué dispositivo se está editando para cada logo
+const editingDevice = { logo1: "desktop", logo2: "desktop" };
+
+function refreshLogoLayoutUI() {
+  const logos = normalizeLogos(state.logos);
+
+  ["logo1", "logo2"].forEach((which) => {
+    const dev = editingDevice[which];
+    const cfg = logos[which].layout[dev];
+
+    // Tabs PC/Celular - marcar activo
+    document.querySelectorAll(`.logo-tab[data-logo="${which}"]`).forEach((tab) => {
+      tab.classList.toggle("active", tab.dataset.device === dev);
+    });
+
+    // Texto "Editando para PC / Celular"
+    const helpEl = document.querySelector(`strong[data-current-device="${which}"]`);
+    if (helpEl) helpEl.textContent = dev === "desktop" ? "PC" : "Celular";
+
+    // Slider de tamaño: ajustar rango y valor
+    const slider = document.querySelector(`input[type="range"][data-control="size"][data-logo="${which}"]`);
+    if (slider) {
+      const range = LOGO_SIZE_RANGES[which][dev];
+      slider.min = range.min;
+      slider.max = range.max;
+      slider.step = 2;
+      slider.value = cfg.size;
+    }
+
+    // Output del tamaño
+    const out = document.querySelector(`output[data-size-output="${which}"]`);
+    if (out) out.textContent = cfg.size;
+
+    // Botones de alineación
+    ["alignX", "alignY"].forEach((axis) => {
+      const row = document.querySelector(`.logo-position-row[data-control="${axis}"][data-logo="${which}"]`);
+      if (row) {
+        row.querySelectorAll("button").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.value === cfg[axis]);
+        });
+      }
+    });
+  });
+}
+
+function bindLogoLayoutControls() {
+  // Tabs PC / Celular (cambiar qué dispositivo se edita)
+  document.querySelectorAll(".logo-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const which = tab.dataset.logo;
+      const dev = tab.dataset.device;
+      if (!which || !dev) return;
+      editingDevice[which] = dev;
+      refreshLogoLayoutUI();
+    });
+  });
+
+  // Sliders de tamaño
+  document.querySelectorAll('input[type="range"][data-control="size"]').forEach((slider) => {
+    slider.addEventListener("input", () => {
+      const which = slider.dataset.logo;
+      const dev = editingDevice[which];
+      const size = Number(slider.value);
+
+      state.logos = normalizeLogos(state.logos);
+      state.logos[which].layout[dev].size = size;
+
+      const out = document.querySelector(`output[data-size-output="${which}"]`);
+      if (out) out.textContent = size;
+
+      applyLogos();
+    });
+    slider.addEventListener("change", () => {
+      saveData();
+    });
+  });
+
+  // Botones de alineacion
+  document.querySelectorAll('.logo-position-row[data-control]').forEach((row) => {
+    row.addEventListener("click", (event) => {
+      const btn = event.target.closest("button[data-value]");
+      if (!btn) return;
+      const axis = row.dataset.control;
+      const which = row.dataset.logo;
+      const dev = editingDevice[which];
+      const value = btn.dataset.value;
+
+      state.logos = normalizeLogos(state.logos);
+      state.logos[which].layout[dev][axis] = value;
+
+      row.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      applyLogos();
+      saveData();
+    });
+  });
+}
+
+// ============================================================
 //  Panel de logos del header (subir / mostrar / quitar)
 // ============================================================
 function bindLogoControls() {
@@ -1350,6 +1794,7 @@ function bindAdminEvents() {
   bindAppearancePanel();
   bindProductImages();
   bindLogoControls();
+  bindLogoLayoutControls();
 
   // Inicializar config de acciones del producto vacío
   renderProductActionsConfig({ enabledActions: [...ACTION_KEYS] });
