@@ -75,6 +75,23 @@
           <p id="sectionSubtitle">Precios claros, detalles completos y compra directa por WhatsApp.</p>
         </div>
         <div class="catalog-tabs" id="catalogTabs" aria-label="Categorias"></div>
+        <div class="filters-bar" id="filtersBar">
+          <div class="filter-search">
+            <input type="search" id="filterSearch" placeholder="🔍 Buscar producto..." aria-label="Buscar producto" />
+            <button type="button" id="filterClearBtn" class="filter-clear-btn" hidden>✕</button>
+          </div>
+          <div class="filter-selects">
+            <label class="filter-select" data-filter="size" hidden>
+              <span>Talla</span>
+              <select id="filterSize"><option value="">Todas</option></select>
+            </label>
+            <label class="filter-select" data-filter="color" hidden>
+              <span>Color</span>
+              <select id="filterColor"><option value="">Todos</option></select>
+            </label>
+          </div>
+          <p id="filterResultCount" class="filter-result-count"></p>
+        </div>
         <div class="products-grid" id="productsGrid"></div>
       </section>
 
@@ -137,6 +154,14 @@
                     <option value="vendido">Vendido</option>
                     <option value="agotado">Agotado</option>
                   </select>
+                </label>
+                <label>
+                  Tallas / tamaños disponibles (separadas por coma)
+                  <input type="text" id="sizes" placeholder="S, M, L, XL  o  40, 41, 42  o  Unico" />
+                </label>
+                <label>
+                  Colores disponibles (separados por coma)
+                  <input type="text" id="colors" placeholder="Negro, Blanco, Azul" />
                 </label>
                 <label class="product-form-full">
                   Detalles (uno por linea)
@@ -274,47 +299,28 @@
 
                 <div class="logo-layout" data-logo="logo1">
                   <p class="logo-layout-title">Posicion y tamaño</p>
+                  <p class="logo-layout-help">Editando layout para <strong data-current-device="logo1">PC</strong></p>
 
                   <div class="logo-layout-tabs">
-                    <button type="button" class="logo-tab active" data-target="logo1-desktop">💻 PC</button>
-                    <button type="button" class="logo-tab" data-target="logo1-mobile">📱 Celular</button>
+                    <button type="button" class="logo-tab active" data-logo="logo1" data-device="desktop">💻 PC</button>
+                    <button type="button" class="logo-tab" data-logo="logo1" data-device="mobile">📱 Celular</button>
                   </div>
 
-                  <div class="logo-layout-pane active" id="logo1-desktop">
+                  <div class="logo-controls">
                     <label class="logo-slider">
-                      <span>Tamaño: <output data-output="logo1-desktop-size">120</output> px</span>
-                      <input type="range" min="40" max="300" step="2" data-control="size" data-logo="logo1" data-device="desktop" />
+                      <span>Tamaño: <output data-size-output="logo1">120</output> px</span>
+                      <input type="range" data-control="size" data-logo="logo1" />
                     </label>
+
                     <div class="logo-position-grid">
                       <span class="logo-position-label">Horizontal</span>
-                      <div class="logo-position-row" data-control="alignX" data-logo="logo1" data-device="desktop">
+                      <div class="logo-position-row" data-control="alignX" data-logo="logo1">
                         <button type="button" data-value="left">⇤ Izq</button>
                         <button type="button" data-value="center">↔ Centro</button>
                         <button type="button" data-value="right">Der ⇥</button>
                       </div>
                       <span class="logo-position-label">Vertical</span>
-                      <div class="logo-position-row" data-control="alignY" data-logo="logo1" data-device="desktop">
-                        <button type="button" data-value="top">⇡ Arriba</button>
-                        <button type="button" data-value="middle">↕ Medio</button>
-                        <button type="button" data-value="bottom">Abajo ⇣</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="logo-layout-pane" id="logo1-mobile">
-                    <label class="logo-slider">
-                      <span>Tamaño: <output data-output="logo1-mobile-size">90</output> px</span>
-                      <input type="range" min="30" max="220" step="2" data-control="size" data-logo="logo1" data-device="mobile" />
-                    </label>
-                    <div class="logo-position-grid">
-                      <span class="logo-position-label">Horizontal</span>
-                      <div class="logo-position-row" data-control="alignX" data-logo="logo1" data-device="mobile">
-                        <button type="button" data-value="left">⇤ Izq</button>
-                        <button type="button" data-value="center">↔ Centro</button>
-                        <button type="button" data-value="right">Der ⇥</button>
-                      </div>
-                      <span class="logo-position-label">Vertical</span>
-                      <div class="logo-position-row" data-control="alignY" data-logo="logo1" data-device="mobile">
+                      <div class="logo-position-row" data-control="alignY" data-logo="logo1">
                         <button type="button" data-value="top">⇡ Arriba</button>
                         <button type="button" data-value="middle">↕ Medio</button>
                         <button type="button" data-value="bottom">Abajo ⇣</button>
@@ -346,47 +352,28 @@
 
                 <div class="logo-layout" data-logo="logo2">
                   <p class="logo-layout-title">Posicion y tamaño</p>
+                  <p class="logo-layout-help">Editando layout para <strong data-current-device="logo2">PC</strong></p>
 
                   <div class="logo-layout-tabs">
-                    <button type="button" class="logo-tab active" data-target="logo2-desktop">💻 PC</button>
-                    <button type="button" class="logo-tab" data-target="logo2-mobile">📱 Celular</button>
+                    <button type="button" class="logo-tab active" data-logo="logo2" data-device="desktop">💻 PC</button>
+                    <button type="button" class="logo-tab" data-logo="logo2" data-device="mobile">📱 Celular</button>
                   </div>
 
-                  <div class="logo-layout-pane active" id="logo2-desktop">
+                  <div class="logo-controls">
                     <label class="logo-slider">
-                      <span>Tamaño: <output data-output="logo2-desktop-size">80</output> px</span>
-                      <input type="range" min="30" max="200" step="2" data-control="size" data-logo="logo2" data-device="desktop" />
+                      <span>Tamaño: <output data-size-output="logo2">80</output> px</span>
+                      <input type="range" data-control="size" data-logo="logo2" />
                     </label>
+
                     <div class="logo-position-grid">
                       <span class="logo-position-label">Horizontal</span>
-                      <div class="logo-position-row" data-control="alignX" data-logo="logo2" data-device="desktop">
+                      <div class="logo-position-row" data-control="alignX" data-logo="logo2">
                         <button type="button" data-value="left">⇤ Izq</button>
                         <button type="button" data-value="center">↔ Centro</button>
                         <button type="button" data-value="right">Der ⇥</button>
                       </div>
                       <span class="logo-position-label">Vertical</span>
-                      <div class="logo-position-row" data-control="alignY" data-logo="logo2" data-device="desktop">
-                        <button type="button" data-value="top">⇡ Arriba</button>
-                        <button type="button" data-value="middle">↕ Medio</button>
-                        <button type="button" data-value="bottom">Abajo ⇣</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="logo-layout-pane" id="logo2-mobile">
-                    <label class="logo-slider">
-                      <span>Tamaño: <output data-output="logo2-mobile-size">60</output> px</span>
-                      <input type="range" min="20" max="150" step="2" data-control="size" data-logo="logo2" data-device="mobile" />
-                    </label>
-                    <div class="logo-position-grid">
-                      <span class="logo-position-label">Horizontal</span>
-                      <div class="logo-position-row" data-control="alignX" data-logo="logo2" data-device="mobile">
-                        <button type="button" data-value="left">⇤ Izq</button>
-                        <button type="button" data-value="center">↔ Centro</button>
-                        <button type="button" data-value="right">Der ⇥</button>
-                      </div>
-                      <span class="logo-position-label">Vertical</span>
-                      <div class="logo-position-row" data-control="alignY" data-logo="logo2" data-device="mobile">
+                      <div class="logo-position-row" data-control="alignY" data-logo="logo2">
                         <button type="button" data-value="top">⇡ Arriba</button>
                         <button type="button" data-value="middle">↕ Medio</button>
                         <button type="button" data-value="bottom">Abajo ⇣</button>
